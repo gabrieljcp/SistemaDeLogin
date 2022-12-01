@@ -39,6 +39,7 @@ if(isset($_POST["ok"])){
 <head>
     <meta charset="UTF-8">
     <title>Recuperar senha</title>
+    <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
     

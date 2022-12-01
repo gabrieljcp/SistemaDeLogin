@@ -1,52 +1,81 @@
-<?php
-
-include("config.php");
-
-if(isset($_POST['email']) || isset($_POST['senha'])){
-
-    if(strlen($_POST['email']) == 0){
-        echo "Preencha seu e-mail";
-    } else if(strlen($_POST ['senha']) == 0){
-        echo "Preencha sua senha";
-    } else {
-        $email = $conn->real_escape_string($_POST['email']);
-        $senha = $conn->real_escape_string($_POST['senha']);
-
-        $sql_code = "SELECT * FROM usuarios WHERE email = '$email' AND senha = '$senha'";
-        $sql_query = $conn->query($sql_code) or die("Falha na execução do código SQL: ".$conn->error);
-        
-        $quantidade = $sql_query->num_rows;
-
-        if($quantidade == 1) {
-            $USER = $sql_query->fetch_assoc();
-
-            if(!isset($_SESSION)) {
-                session_start();
-            }
-            
-            $_SESSION['id'] = $USER['id'];
-            $_SESSION['nome'] = $USER['nome'];
-
-            header("Location: inicio.php");
-
-        } else {
-            echo "Falha ao logar! E-mail ou senha incorretos";
-        }
-    }
-}
+<?php 
+	include("recaptchalib.php");
 ?>
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-    </head>
-    <body>
-        
-       
-        <form method="POST" action="">
-            <p><input type="text" placeholder="E-mail" name="email" value=""></p>
-            <p><input type="password" name="senha"></p>
-            <p><a href="esqueceuSenha.php">Esqueceu sua senha? </a></p>
-            <p><input type="submit" value="Entrar"></p>
-        </form>
-    </body>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sistema de Login</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body id="login">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4 offset-lg-4 mt-5">
+				<div class="card-login" id="card">
+					<div class="card-body">
+						<h5>Acesso Restrito</h5>
+						<form action="verificar1.php" method="POST">
+							<div class="mb-3">
+								<input type="email" name="email" class="form-control" placeholder="E-mail">
+							</div>
+							<div class="mb-3">
+								<input type="password" name="senha" placeholder="Senha" class="form-control">
+							</div>
+							<div class="mb-3">
+								<a href="index3.php">Esqueceu a senha?</a> |
+								<a href="cadastrar-login.php" >Cadastrar</a>
+							</div>
+							<div class="mb-3">
+								<button type="submit" name="enviar" class="btn btn-success" onclick="return valida()">Acesso</button>
+								
+							</div>
+							<div class="g-recaptcha" data-sitekey="6LdzuDYiAAAAAIi0WSj7teF1p7O8wufMtf5gKMjW"></div>
+							
+						</form>				
+						<?php
+
+						if(isset($_POST['enviar'])){
+							if(!empty($_POST['g-recaptcha-response'])){
+								$url = "https://www.google.com/recaptcha/api/siteverify";
+                                $secret = "6LdzuDYiAAAAAKyZ2grG84YISZ2jIfiHmV0u6xbM";
+								$response = $_POST['g-recaptcha-response'];
+								$variaveis = "secret=".$secret."&response".$response;
+
+								$ch = curl_init($url);
+								curl_setopt( $ch, CURLOPT_POST, 1);
+								curl_setopt( $ch, CURLOPT_POSTFIELDS, $variaveis);
+								curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+								curl_setopt( $ch, CURLOPT_HEADER, 0);
+								curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+								$resposta = curl_exec($ch);
+
+								$resultado = json_decode($resposta);
+
+								if($resultado->success == 1){
+                                     echo "a";
+								}
+							}
+						}
+						
+						?>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+	<script src="https://www.google.com/recaptcha/api.js?hl=pt-BR"></script>
+	<script type="text/javascript">
+		function valida() {
+			if (grecaptcha.getResponse() == "") {
+				alert("Você precisa marcar a validação!");
+				return false;
+			}
+		}
+	</script>
+</body>
 </html>

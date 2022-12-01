@@ -12,7 +12,7 @@ include('protect.php')
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
-	<title>Cadastro</title>
+	<title>Sislogin</title>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg bg-light">

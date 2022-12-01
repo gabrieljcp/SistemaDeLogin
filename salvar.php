@@ -1,59 +1,87 @@
-<?php 
+<?php
 	switch ($_REQUEST['acao']) {
 		case 'cadastrar':
 			$sql = "INSERT INTO usuarios
 						(nome, email, senha, tipo, status)
-					VALUES 
+					VALUES
 						('".$_POST['nome']."',
 						'".$_POST['email']."',
 						'".$_POST['senha']."',
-						'".$_POST['tipo']."',	
+						'".$_POST['tipo']."',
 						'1')";
 			$res = $conn->query($sql);
-			if ($res==true) {
+			if($res==true){
 				print "<script>alert('Cadastrou com sucesso');</script>";
-				print "<script>location.href='?page=listar';</script>";			
-			} else {
+				print "<script>location.href='?page=listar';</script>";
+			}else{
 				print "<script>alert('Não foi possível cadastrar');</script>";
 				print "<script>location.href='?page=listar';</script>";
 			}
-									
 			break;
+
+		case 'cadastrar-login':
+				$sql = "INSERT INTO usuarios
+							(nome, email, senha, tipo, status)
+						VALUES
+							('".$_POST['nome']."',
+							'".$_POST['email']."',
+							'".$_POST['senha']."',
+							'".$_POST['tipo']."',
+							'1')";
+				$res = $conn->query($sql);
+				if($res==true){
+					print "<script>alert('Cadastrou com sucesso');</script>";
+					print "<script>location.href='?page=index';</script>";
+				}else{
+					print "<script>alert('Não foi possível cadastrar');</script>";
+					print "<script>location.href='?page=index';</script>";
+				}
+				break;	
 		
 		case 'editar':
-			$nome = $_POST["nome"];
-			$email = $_POST["email"];
-			$senha = $_POST["senha"];
-			$tipo = $_POST["tipo"];
-			$status = $_POST["status"];								
-
-			$sql = "UPDATE usuarios 
-			SET nome='{$nome}',email='{$email}',senha='{$senha}',tipo='{$tipo}',status='{$status}',
-			WHERE id=".$_REQUEST["id"]; 		
+			$sql = "UPDATE usuarios SET
+						nome='".$_POST['nome']."',
+						email='".$_POST['email']."',
+						tipo='".$_POST['tipo']."',
+						status='".$_POST['status']."'
+					WHERE
+						id=".$_POST['id'];
 
 			$res = $conn->query($sql);
-
 			if($res==true){
-				print "<script>alert('Editado com sucesso!');</script>";
+				print "<script>alert('Editou com sucesso');</script>";
 				print "<script>location.href='?page=listar';</script>";
 			}else{
 				print "<script>alert('Não foi possível editar');</script>";
 				print "<script>location.href='?page=listar';</script>";
 			}
-		break;
+			break;
+		
+			case 'alterarSenha':
+				$sql = "UPDATE usuarios SET
+							senha='".$_POST['senha']."'							
+						WHERE
+							id=".$_POST['id'];
+	
+				$res = $conn->query($sql);
+				if($res==true){
+					print "<script>alert('Senha alterada com sucesso');</script>";
+					print "<script>location.href='?page=listar';</script>";
+				}else{
+					print "<script>alert('Não foi possível alterar senha');</script>";
+					print "<script>location.href='?page=listar';</script>";
+				}
+				break;	
 
 		case 'excluir':
-			$sql = "DELETE FROM usuarios 
-			WHERE id=".$_REQUEST["id"];
+			$sql = "DELETE FROM usuarios WHERE id=".$_REQUEST["id"];
 			$res = $conn->query($sql);
-
 			if($res==true){
-				print "<script>alert('Excluido com sucesso!');</script>";
+				print "<script>alert('Excluiu com sucesso');</script>";
 				print "<script>location.href='?page=listar';</script>";
 			}else{
 				print "<script>alert('Não foi possível excluir');</script>";
 				print "<script>location.href='?page=listar';</script>";
 			}
-			break;	
+			break;
 	}
- ?>

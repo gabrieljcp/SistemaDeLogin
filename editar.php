@@ -1,43 +1,39 @@
+<h1>Editar Usuário</h1>
 <?php
+	$sql = "SELECT * FROM usuarios WHERE id=".$_REQUEST['id'];
 
-if(!isset($_SESSION)) {
-    session_start();
-}
-include('protect.php')
+	$res = $conn->query($sql);
 
-?>
-<h1>Editar Usuários</h1>
-
-<?php
-    $sql = "SELECT * FROM usuarios WHERE id=
-    ".$_REQUEST["id"];
-    $res = $conn->query($sql);
-    $row = $res->fetch_object();
+	$row = $res->fetch_object();
 ?>
 <form action="?page=salvar" method="POST">
 	<input type="hidden" name="acao" value="editar">
-    <input type="hidden" name="id" value="<?php print $row->id; ?>">
+	<input type="hidden" name="id" value="<?php print $row->id; ?>">
 	<div class="mb-3">
-		<label>Nome: </label>
+		<label>Nome</label>
 		<input type="text" name="nome" value="<?php print $row->nome; ?>" class="form-control">
 	</div>
 	<div class="mb-3">
-		<label>Email: </label>
-		<input type="email" name="email" value="<?php print $row->email; ?>" class="form-control" >
-	</div>
-	<div class="mb-3">
-		<label>Senha: </label>
-		<input type="password" name="senha" value="<?php print $row->senha; ?>" class="form-control">
-	</div>
-	<div class="mb-3">
-		<label>Tipo: </label>
-		<input type="text" name="tipo" value="<?php print $row->tipo; ?>" class="form-control">
+		<label>E-mail</label>
+		<input type="email" name="email" value="<?php print $row->email; ?>"  class="form-control">
 	</div>	
 	<div class="mb-3">
-		<label>Status: </label>
-		<input type="text" name="status" value="<?php print $row->status; ?>" class="form-control">
+		<label>Tipo</label>
+		<select name="tipo" class="form-control">
+			<option>-Escolha-</option>
+			<option value="1" <?php print($row->tipo==1?"selected":""); ?> >Administrador</option>
+			<option value="2" <?php print($row->tipo==2?"selected":""); ?> >Usuário Comum</option>
+		</select>
 	</div>
 	<div class="mb-3">
-		<button type="submit" class="btn btn-primary">Enviar</button>
+		<label>Status</label>
+		<select name="status" class="form-control">
+			<option>-Escolha-</option>
+			<option value="1" <?php print($row->status==1?"selected":""); ?> >Ativo</option>
+			<option value="2" <?php print($row->status==2?"selected":""); ?> >Inativo</option>
+		</select>
+	</div>
+	<div class="mb-3">
+		<button type="submit" class="btn btn-success">Enviar</button>
 	</div>
 </form>
